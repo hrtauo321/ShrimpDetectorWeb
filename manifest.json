@@ -1,0 +1,39 @@
+{
+    "name": "Shrimp Detector",
+    "short_name": "Shrimp",
+    "start_url": "index.html",
+    "display": "standalone",
+    "background_color": "#ffffff",
+    "theme_color": "#ffffff",
+    "icons": [
+        {
+            "src": "shrimp.svg",
+            "sizes": "any",
+            "type": "image/svg+xml"
+        },
+        {
+            "src": "shrimp.256x213.png",
+            "sizes": "256x213",
+            "type": "image/png"
+        },
+        {
+            "src": "shrimp.512x426.png",
+            "sizes": "512x426",
+            "type": "image/png"
+        },
+        {
+            "src": "shrimp.1024x852.png",
+            "sizes": "1024x852",
+            "type": "image/png"
+        }
+    ],
+    "screenshots": [
+        {
+            "src": "shrimp.1024x852.png",
+            "sizes": "1024x852",
+            "type": "image/png",
+            "form_factor": "wide",
+            "label": "Shrimp"
+        }
+    ]
+}

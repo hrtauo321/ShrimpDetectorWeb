@@ -1,0 +1,96 @@
+<!-- https://github.com/hrtauo321/ShrimpDetectorWeb -->
+<html>
+    <head>
+        <title>Shrimp Detector</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="google" content="notranslate">
+        <link rel="manifest" href="manifest.json">
+        <link rel="stylesheet" href="style.css">
+        <script>
+            if ("serviceWorker" in navigator) navigator.serviceWorker.register("service-worker.js");
+        </script>
+        <link rel="apple-touch-icon" sizes="256x213" href="shrimp.256x213.png">
+        <link rel="apple-touch-icon" sizes="512x426" href="shrimp.512x426.png">
+        <link rel="apple-touch-icon" sizes="1024x852" href="shrimp.1024x852.png">
+    </head>
+    <body>
+        <h1 class="Title">Shrimp Detector</h1>
+        <img src="shrimp.svg" alt="Shrimp Image" style="width: 50dvw; height: 50dvh;">
+        <button id="Start">start detection</button>
+
+        <script>
+            (async () => {
+                const shrimpConfirmationHTML = await (await fetch("shrimpConfirmation.html")).text();
+                const startButton = document.getElementById("Start");
+
+                startButton.addEventListener("click", () => {
+                    const newWindow = window.open("", "shrimpConfirmation", "width=400,height=300,popup");
+                    if (newWindow) {
+                        newWindow.document.write(shrimpConfirmationHTML);
+                        newWindow.document.close();
+
+                        newWindow.history.pushState(null, null, "Are-you-shrimp?");
+
+                        let closeWindowHandlerHandled = false;
+                        const closeWindowHandler = async () => {
+                            if (closeWindowHandlerHandled) return;
+                            closeWindowHandlerHandled = true;
+                            newWindow.close();
+                            console.log("Shrimp detection window closed.");
+                            const shrimpDetectedWindow = window.open("", "shrimpDetected", "");
+                            const shrimpNotDetectedWindow = window.open("", "shrimpNotDetected", "");
+                            if (shrimpDetectedWindow) {
+                                console.log("SHRIMP DETECTED!");
+                                const audio = new Audio("shrimpDetected.mp3");
+                                const audio2 = new Audio("shrimpDetected2.mp3");
+                                audio.addEventListener("ended", () => {
+                                    if (!shrimpDetectedWindow.closed) audio2.play();
+                                });
+                                audio2.addEventListener("ended", () => {
+                                    if (!shrimpDetectedWindow.closed) audio.play();
+                                });
+                                await audio.play();
+                                shrimpDetectedWindow.addEventListener("beforeunload", () => {
+                                    audio.pause();
+                                    audio2.pause();
+                                });
+                            } else if (shrimpNotDetectedWindow) {
+                                console.log("SHRIMP NOT DETECTED!");
+                                const audio = new Audio("shrimpNotDetected.opus"); // Should use mp3?
+                                audio.loop = true;
+                                await audio.play();
+                                shrimpNotDetectedWindow.addEventListener("beforeunload", () => {
+                                    audio.pause();
+                                });
+                            }
+                            else console.log("No shrimp detection result available.");
+                        };
+                        newWindow.addEventListener("beforeunload", closeWindowHandler);
+                        newWindow.addEventListener("unload", closeWindowHandler);
+                        newWindow.addEventListener("popstate", closeWindowHandler);
+                        newWindow.addEventListener("pagehide", closeWindowHandler);
+
+                        let closeThisWindowHandlerHandled = false;
+                        const closeThisWindowHandler = () => {
+                            if (closeThisWindowHandlerHandled) return;
+                            closeThisWindowHandlerHandled = true;
+                            if (newWindow) newWindow.close();
+                            const shrimpDetectedWindow = window.open("", "shrimpDetected", "");
+                            const shrimpNotDetectedWindow = window.open("", "shrimpNotDetected", "");
+                            if (shrimpDetectedWindow) shrimpDetectedWindow.close();
+                            if (shrimpNotDetectedWindow) shrimpNotDetectedWindow.close();
+                            window.close();
+                        };
+                        window.addEventListener("beforeunload", closeThisWindowHandler);
+                        window.addEventListener("unload", closeThisWindowHandler);
+                        window.addEventListener("popstate", closeThisWindowHandler);
+                        window.addEventListener("pagehide", closeThisWindowHandler);
+                    } else {
+                        alert("Please allow pop-ups for this site.");
+                    }
+                });
+            })();
+        </script>
+    </body>
+</html>

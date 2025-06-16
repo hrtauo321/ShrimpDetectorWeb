@@ -1,0 +1,49 @@
+<html>
+    <head>
+        <title>Shrimp Detector</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="google" content="notranslate">
+        <link rel="stylesheet" href="style.css">
+    </head>
+    <body>
+        <h1>Are you shrimp?</h1>
+        <div class="YesOrNo">
+            <button id="Yes">Yes</button>
+            <button id="No">No</button>
+        </div>
+
+        <script>
+            (async () => {
+                const shrimpDetectedHTML = await (await fetch("shrimpDetected.html")).text();
+                const shrimpNotDetectedHTML = await (await fetch("shrimpNotDetected.html")).text();
+                const yesButton = document.getElementById("Yes");
+                const noButton = document.getElementById("No");
+
+                yesButton.addEventListener("click", () => {
+                    const newWindow = window.open("", "shrimpDetected", "width=962,height=542,popup");
+                    if (newWindow) {
+                        newWindow.document.write(shrimpDetectedHTML);
+                        newWindow.document.close();
+                        newWindow.history.pushState(null, null, "Shrimp-Detected");
+                    } else {
+                        alert("Please allow pop-ups for this site.");
+                    }
+                    window.close();
+                });
+
+                noButton.addEventListener("click", () => {
+                    const newWindow = window.open("", "shrimpNotDetected", "width=962,height=542,popup");
+                    if (newWindow) {
+                        newWindow.document.write(shrimpNotDetectedHTML);
+                        newWindow.document.close();
+                        newWindow.history.pushState(null, null, "Shrimp-Not-Detected");
+                    } else {
+                        alert("Please allow pop-ups for this site.");
+                    }
+                    window.close();
+                });
+            })();
+        </script>
+    </body>
+</html>
