@@ -21,12 +21,22 @@
                 const yesButton = document.getElementById("Yes");
                 const noButton = document.getElementById("No");
 
+                const fireEvent = (newWindow, confirmationResult) => window.opener?.dispatchEvent(new CustomEvent("shrimpConfirmationResult", {
+                    detail: {
+                        newWindow,
+                        shrimpDetected: confirmationResult
+                    },
+                    bubbles: true,
+                    cancelable: false
+                }));
+
                 yesButton.addEventListener("click", () => {
                     const newWindow = window.open("", "shrimpDetected", "width=962,height=542,popup");
                     if (newWindow) {
                         newWindow.document.write(shrimpDetectedHTML);
                         newWindow.document.close();
                         newWindow.history.pushState(null, null, "Shrimp-Detected");
+                        fireEvent(newWindow, true);
                     } else {
                         alert("Please allow pop-ups for this site.");
                     }
@@ -39,6 +49,7 @@
                         newWindow.document.write(shrimpNotDetectedHTML);
                         newWindow.document.close();
                         newWindow.history.pushState(null, null, "Shrimp-Not-Detected");
+                        fireEvent(newWindow, false);
                     } else {
                         alert("Please allow pop-ups for this site.");
                     }
@@ -46,5 +57,6 @@
                 });
             })();
         </script>
+        <script>navigator.serviceWorker?.register("service-worker.js");</script>
     </body>
 </html>
