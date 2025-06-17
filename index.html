@@ -69,7 +69,7 @@
                         const closeWindowHandler = async () => {
                             if (closeWindowHandlerHandled) return;
                             closeWindowHandlerHandled = true;
-                            shrimpConfirmationWindow?.close();
+                            if (!shrimpConfirmationWindow?.closed) shrimpConfirmationWindow?.close();
                             console.log("Shrimp detection window closed.");
                         };
                         shrimpConfirmationWindow.addEventListener("beforeunload", closeWindowHandler);
@@ -81,11 +81,9 @@
                         const closeThisWindowHandler = () => {
                             if (closeThisWindowHandlerHandled) return;
                             closeThisWindowHandlerHandled = true;
-                            if (!shrimpConfirmationWindow?.closed) shrimpConfirmationWindow?.close();
-                            const shrimpDetectedWindow = window.open("", "shrimpDetected", "");
-                            const shrimpNotDetectedWindow = window.open("", "shrimpNotDetected", "");
                             if (!shrimpDetectedWindow?.closed) shrimpDetectedWindow?.close();
                             if (!shrimpNotDetectedWindow?.closed) shrimpNotDetectedWindow?.close();
+                            if (!shrimpConfirmationWindow?.closed) shrimpConfirmationWindow?.close();
                             window.close();
                         };
                         window.addEventListener("beforeunload", closeThisWindowHandler);
